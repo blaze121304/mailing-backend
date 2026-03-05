@@ -1,0 +1,6 @@
+#FileLock
+#Thu Mar 05 17:47:32 KST 2026
+hostName=rusty-lab
+id=19cbd2e3d07903b525525c7a5041ad836dd55ff96c1
+method=file
+server=192.168.10.100\:52899

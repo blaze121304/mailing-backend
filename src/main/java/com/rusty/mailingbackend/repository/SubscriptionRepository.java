@@ -1,6 +1,6 @@
 package com.rusty.mailingbackend.repository;
 
-import com.rusty.mailingbackend.entity.Subscription;
+import com.rusty.mailingbackend.domain.entity.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

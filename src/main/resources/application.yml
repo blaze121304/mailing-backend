@@ -14,13 +14,21 @@ spring:
     show-sql: false
 
   mail:
-    host: sandbox.smtp.mailtrap.io
-    port: 2525
-    username: ${MAILTRAP_USERNAME:6ad9be5e7ef0b7}
-    password: ${MAILTRAP_PASSWORD:90c4b49af30f47}
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_USERNAME:rustydevbiz@gmail.com} # 발송할 구글 이메일 주소
+    password: ${GMAIL_APP_PASSWORD:zukmooyofaijwyzd} # 일반 비밀번호가 아닙니다! (아래 설명 참고)
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true # 추가해주면 보안 연결이 더 확실해집니다.
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY:AIzaSyBBe1bzGEw3yL6A9Sr-y1yB8ajbzLmWKFc}
+
+newsletter:
+  recipient: blaze121304@gmail.com
 
 server:
   port: 8080

@@ -1,7 +1,7 @@
 package com.rusty.mailingbackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rusty.mailingbackend.dto.SubscribeRequest;
+import com.rusty.mailingbackend.domain.dto.SubscribeRequest;
 import com.rusty.mailingbackend.repository.SubscriptionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

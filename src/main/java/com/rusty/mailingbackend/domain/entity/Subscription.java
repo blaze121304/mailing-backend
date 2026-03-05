@@ -1,4 +1,4 @@
-package com.rusty.mailingbackend.entity;
+package com.rusty.mailingbackend.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

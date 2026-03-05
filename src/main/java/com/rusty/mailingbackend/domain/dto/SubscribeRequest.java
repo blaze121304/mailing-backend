@@ -1,4 +1,4 @@
-package com.rusty.mailingbackend.dto;
+package com.rusty.mailingbackend.domain.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

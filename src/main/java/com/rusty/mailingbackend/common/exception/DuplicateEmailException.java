@@ -1,4 +1,4 @@
-package com.rusty.mailingbackend.exception;
+package com.rusty.mailingbackend.common.exception;
 
 public class DuplicateEmailException extends RuntimeException {
 

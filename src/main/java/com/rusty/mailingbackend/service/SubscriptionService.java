@@ -1,8 +1,8 @@
 package com.rusty.mailingbackend.service;
 
-import com.rusty.mailingbackend.dto.SubscribeRequest;
-import com.rusty.mailingbackend.entity.Subscription;
-import com.rusty.mailingbackend.exception.DuplicateEmailException;
+import com.rusty.mailingbackend.domain.dto.SubscribeRequest;
+import com.rusty.mailingbackend.domain.entity.Subscription;
+import com.rusty.mailingbackend.common.exception.DuplicateEmailException;
 import com.rusty.mailingbackend.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

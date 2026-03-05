@@ -16,8 +16,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${GMAIL_USERNAME:rustydevbiz@gmail.com} # 발송할 구글 이메일 주소
-    password: ${GMAIL_APP_PASSWORD:zukmooyofaijwyzd} # 일반 비밀번호가 아닙니다! (아래 설명 참고)
+    username: ${GMAIL_USERNAME:} # 발송할 구글 이메일 주소
+    password: ${GMAIL_APP_PASSWORD:} # 일반 비밀번호가 아닙니다! (아래 설명 참고)
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
@@ -25,7 +25,7 @@ spring:
 
 gemini:
   api:
-    key: ${GEMINI_API_KEY:AIzaSyBBe1bzGEw3yL6A9Sr-y1yB8ajbzLmWKFc}
+    key: ${GEMINI_API_KEY:}
 
 newsletter:
   recipient: blaze121304@gmail.com

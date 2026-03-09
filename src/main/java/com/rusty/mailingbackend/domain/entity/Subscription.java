@@ -21,6 +21,9 @@ public class Subscription {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, columnDefinition = "varchar(255) default '하'")
+    private String difficulty;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "subscription_categories", joinColumns = @JoinColumn(name = "subscription_id"))
     @Column(name = "category")

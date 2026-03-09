@@ -14,8 +14,7 @@ public class DailyNewsletterScheduler {
     private final NewsGenerationService newsGenerationService;
     private final EmailService emailService;
 
-    // 크론 주석처리 중 - 운영 시 해제: cron = "0 0 9 * * ?"  (매일 오전 9시)
-    // @Scheduled(cron = "0 0 9 * * ?")
+    @Scheduled(cron = "0 0 9 * * ?")
     public void sendDailyNewsletter() {
         try {
             // 1단계: DB에 오늘 뉴스 없으면 Gemini로 생성 후 저장

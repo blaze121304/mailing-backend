@@ -31,7 +31,7 @@ class SubscribeControllerTest {
     @Test
     void subscribe_success_returns200() throws Exception {
         subscriptionRepository.deleteAll();
-        SubscribeRequest request = new SubscribeRequest("user@example.com", List.of("IT", "ECONOMY"));
+        SubscribeRequest request = new SubscribeRequest("user@example.com", "하", List.of("IT", "ECONOMY"));
 
         mockMvc.perform(post("/api/subscribe")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -42,7 +42,7 @@ class SubscribeControllerTest {
     @Test
     void subscribe_duplicateEmail_returns400() throws Exception {
         subscriptionRepository.deleteAll();
-        SubscribeRequest request = new SubscribeRequest("dup@example.com", List.of("IT"));
+        SubscribeRequest request = new SubscribeRequest("dup@example.com", "하", List.of("IT"));
         mockMvc.perform(post("/api/subscribe")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))

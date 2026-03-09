@@ -23,6 +23,7 @@ public class SubscriptionService {
         }
         Subscription subscription = Subscription.builder()
                 .email(request.getEmail())
+                .difficulty(request.getDifficulty())
                 .categories(request.getCategories())
                 .build();
         subscriptionRepository.save(subscription);
@@ -30,5 +31,14 @@ public class SubscriptionService {
 
     public List<Subscription> findAllSubscribers() {
         return subscriptionRepository.findAll();
+    }
+
+    public boolean isSubscribed(String email) {
+        return subscriptionRepository.existsByEmail(email);
+    }
+
+    public Subscription findByEmail(String email) {
+        return subscriptionRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("구독 정보를 찾을 수 없는 이메일입니다: " + email));
     }
 }

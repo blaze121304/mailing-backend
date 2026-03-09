@@ -24,12 +24,36 @@ public class SubscribeController {
         return ResponseEntity.ok().build();
     }
 
-    // DB에서 오늘 뉴스 꺼내서 발송 (없으면 Gemini 생성 후 저장)
+    // 실제 구독자 발송: 구독자별 선택 카테고리 × 난이도 1개씩 (1~5개)
     @PostMapping("/send-newsletter")
     public ResponseEntity<String> sendNewsletter() {
         try {
             emailService.sendNewsletter();
             return ResponseEntity.ok("뉴스레터 발송 완료!");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("발송 실패: " + e.getMessage());
+        }
+    }
+
+    // 샘플 발송: 미구독자 전용, body로 이메일·난이도·카테고리 입력
+    @PostMapping("/sample-newsletter")
+    public ResponseEntity<String> sampleNewsletter(@Valid @RequestBody SubscribeRequest request) {
+        try {
+            emailService.sendSampleNewsletter(request.getEmail(), request.getDifficulty(), request.getCategories());
+            return ResponseEntity.ok("샘플 뉴스레터 발송 완료!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("발송 실패: " + e.getMessage());
+        }
+    }
+
+    // 테스트 발송: 전체 15개를 고정 수신자에게
+    @PostMapping("/test-send-newsletter")
+    public ResponseEntity<String> testSendNewsletter() {
+        try {
+            emailService.sendTestNewsletter();
+            return ResponseEntity.ok("테스트 뉴스레터 발송 완료!");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("발송 실패: " + e.getMessage());
         }

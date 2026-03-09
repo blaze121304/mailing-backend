@@ -27,5 +27,8 @@ gemini:
   api:
     key: ${gemini.api.key}
 
+newsletter:
+  recipient: blaze121304@gmail.com
+
 server:
-  port: 8080
+  port: 10004

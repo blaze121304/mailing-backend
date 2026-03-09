@@ -59,7 +59,8 @@ public class GeminiNewsService {
                                .getOrDefault(difficulty, category + " 분야 최신 뉴스를 한국어로 요약해주세요.");
 
         Map<String, Object> requestBody = Map.of(
-            "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt))))
+            "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt)))),
+            "generationConfig", Map.of("thinkingConfig", Map.of("thinkingBudget", 0))
         );
 
         HttpHeaders headers = new HttpHeaders();
@@ -81,7 +82,13 @@ public class GeminiNewsService {
             List<?> candidates = (List<?>) body.get("candidates");
             Map<?, ?> content = (Map<?, ?>) ((Map<?, ?>) candidates.get(0)).get("content");
             List<?> parts = (List<?>) content.get("parts");
-            return (String) ((Map<?, ?>) parts.get(0)).get("text");
+            // thinking 파트(thought=true)를 건너뛰고 실제 텍스트 파트를 반환
+            for (Object part : parts) {
+                Map<?, ?> partMap = (Map<?, ?>) part;
+                if (Boolean.TRUE.equals(partMap.get("thought"))) continue;
+                return (String) partMap.get("text");
+            }
+            return "뉴스 생성에 실패했습니다.";
         } catch (Exception e) {
             log.error("Gemini 응답 파싱 실패: {}", e.getMessage());
             return "뉴스 생성에 실패했습니다.";

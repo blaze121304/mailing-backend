@@ -9,5 +9,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
     boolean existsByEmail(String email);
 
+    java.util.Optional<Subscription> findByEmail(String email);
+
     List<Subscription> findAll();
 }

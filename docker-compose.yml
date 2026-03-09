@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mailing-backend:
+    image: mailing-backend:latest
+    container_name: mailing-backend
+    ports:
+      - "10004:10004"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prd
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_NAME=mailing
+      - DB_USERNAME=rusty
+      - DB_PASSWORD=zja2592zja!@#
+      - GMAIL_USERNAME=rustydevbiz@gmail.com
+      - GMAIL_PASSWORD=zukmooyofaijwyzd
+      - GEMINI_API_KEY=AIzaSyA-YvXB3FfQ-UhHfJNYbTjnxvTkn7KPSZ8
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

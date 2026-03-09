@@ -1,3 +1,10 @@
+# 민감 정보 키파일
+keyfile.md
+
+# H2 DB 파일
+data/mailing.mv.db
+data/mailing.lock.db
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar

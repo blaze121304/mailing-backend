@@ -1,0 +1,1 @@
+org.springframework.boot.env.EnvironmentPostProcessor=com.rusty.mailingbackend.common.config.KeyFileEnvironmentPostProcessor

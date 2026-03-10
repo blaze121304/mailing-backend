@@ -38,3 +38,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### DATA ###
+mailing.lock.db
+mailing.mv.db
+mailing.trace.db
+schema-mysql.sql
+settings.local.json

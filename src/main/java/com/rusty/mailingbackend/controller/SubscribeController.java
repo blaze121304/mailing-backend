@@ -75,4 +75,10 @@ public class SubscribeController {
             return ResponseEntity.internalServerError().body("재생성 실패: " + e.getMessage());
         }
     }
+
+    @GetMapping("/api/mailing")
+    @ResponseBody
+    public String health() {
+        return "OK";
+    }
 }

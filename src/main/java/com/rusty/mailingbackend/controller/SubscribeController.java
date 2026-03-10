@@ -76,7 +76,7 @@ public class SubscribeController {
         }
     }
 
-    @GetMapping("/api/mailing")
+    @GetMapping("/mailing")
     @ResponseBody
     public String health() {
         return "OK";

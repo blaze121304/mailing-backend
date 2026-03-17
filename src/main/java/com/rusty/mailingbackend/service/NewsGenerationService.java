@@ -20,7 +20,30 @@ public class NewsGenerationService {
     private final NewsItemRepository newsItemRepository;
 
     /**
-     * 오늘 뉴스가 DB에 없으면 Gemini로 15개 생성 후 저장, 있으면 그대로 반환
+     * 오전 8시 스케줄러용: DB에 오늘 뉴스 없으면 Gemini로 15개 생성 후 저장
+     */
+    public void generateTodayNews() {
+        LocalDate today = LocalDate.now();
+        List<NewsItem> existing = newsItemRepository.findByNewsDate(today);
+
+        if (existing.size() < 15) {
+            log.info("오늘 뉴스 생성 시작 (현재 {}개)", existing.size());
+            generateAndSave(today);
+        } else {
+            log.info("오늘 뉴스 이미 생성됨 ({}개), 스킵", existing.size());
+        }
+    }
+
+    /**
+     * DB에서 오늘 뉴스를 난이도·카테고리로 조회 (생성하지 않음)
+     */
+    public List<NewsItem> fetchTodayNews(String difficulty, List<String> categories) {
+        return newsItemRepository.findByNewsDateAndDifficultyAndCategoryIn(
+            LocalDate.now(), difficulty, categories);
+    }
+
+    /**
+     * 오늘 뉴스가 DB에 없으면 Gemini로 15개 생성 후 저장, 있으면 그대로 반환 (debug/test용)
      */
     public Map<String, Map<String, String>> getTodayNews() {
         LocalDate today = LocalDate.now();

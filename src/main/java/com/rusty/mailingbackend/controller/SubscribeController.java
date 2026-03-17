@@ -6,9 +6,11 @@ import com.rusty.mailingbackend.service.NewsGenerationService;
 import com.rusty.mailingbackend.service.SubscriptionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -21,6 +23,11 @@ public class SubscribeController {
     @PostMapping("/subscribe")
     public ResponseEntity<Void> subscribe(@Valid @RequestBody SubscribeRequest request) {
         subscriptionService.subscribe(request);
+        try {
+            emailService.sendSubscriptionNews(request.getEmail(), request.getDifficulty(), request.getCategories());
+        } catch (Exception e) {
+            log.warn("구독 완료 뉴스 발송 실패 [{}]: {}", request.getEmail(), e.getMessage());
+        }
         return ResponseEntity.ok().build();
     }
 

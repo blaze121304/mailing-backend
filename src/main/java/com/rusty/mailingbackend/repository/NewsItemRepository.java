@@ -10,4 +10,6 @@ public interface NewsItemRepository extends JpaRepository<NewsItem, Long> {
     List<NewsItem> findByNewsDate(LocalDate date);
 
     boolean existsByNewsDateAndCategoryAndDifficulty(LocalDate date, String category, String difficulty);
+
+    List<NewsItem> findByNewsDateAndDifficultyAndCategoryIn(LocalDate date, String difficulty, List<String> categories);
 }

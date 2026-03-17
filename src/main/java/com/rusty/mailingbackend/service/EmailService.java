@@ -1,6 +1,7 @@
 package com.rusty.mailingbackend.service;
 
 import com.rusty.mailingbackend.domain.dto.NewsItemDto;
+import com.rusty.mailingbackend.domain.entity.NewsItem;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -45,20 +46,16 @@ public class EmailService {
         log.info("테스트 뉴스레터 발송 완료 -> {}", testRecipientEmail);
     }
 
-    // 실제 발송: 구독자별 선택 카테고리 × 난이도 1개씩 (1~5개)
+    // 실제 발송: 구독자별 선택 카테고리 × 난이도 DB 조회 후 발송
     public void sendNewsletter() throws MessagingException {
-        Map<String, Map<String, String>> newsData = newsGenerationService.getTodayNews();
         List<com.rusty.mailingbackend.domain.entity.Subscription> subscribers = subscriptionService.findAllSubscribers();
 
         log.info("실제 뉴스레터 발송 시작 - 구독자 {}명", subscribers.size());
 
         for (var subscriber : subscribers) {
-            List<NewsItemDto> newsList = new ArrayList<>();
-            for (String category : subscriber.getCategories()) {
-                String raw = newsData.getOrDefault(category, Map.of())
-                                     .getOrDefault(subscriber.getDifficulty(), "");
-                newsList.add(new NewsItemDto(category, extractTitle(raw), extractBody(raw)));
-            }
+            List<NewsItem> newsItems = newsGenerationService.fetchTodayNews(
+                subscriber.getDifficulty(), subscriber.getCategories());
+            List<NewsItemDto> newsList = toNewsItemDtoList(newsItems);
             if (newsList.isEmpty()) continue;
 
             sendMail(subscriber.getEmail(), "[뉴스레터] 오늘의 뉴스 - " + newsList.size() + "개 주제", newsList);
@@ -68,24 +65,37 @@ public class EmailService {
         log.info("전체 발송 완료 - {}명", subscribers.size());
     }
 
-    // 샘플 발송: 미구독자 전용, DB 저장 없이 즉시 발송
+    // 샘플 발송: 미구독자 전용, DB에서 조회하여 즉시 발송
     public void sendSampleNewsletter(String email, String difficulty, List<String> categories) throws MessagingException {
         if (subscriptionService.isSubscribed(email)) {
             throw new IllegalArgumentException("이미 구독 중인 이메일입니다. 구독자는 매일 오전 9시에 자동 발송됩니다.");
         }
 
-        log.info("샘플 뉴스레터 발송 시작 -> {} ({}개 카테고리, 난이도:{})", email, categories.size(), difficulty);
+        log.info("샘플 뉴스레터 발송 -> {} ({}개 카테고리, 난이도:{})", email, categories.size(), difficulty);
 
-        Map<String, Map<String, String>> newsData = newsGenerationService.getTodayNews();
-
-        List<NewsItemDto> newsList = new ArrayList<>();
-        for (String category : categories) {
-            String raw = newsData.getOrDefault(category, Map.of()).getOrDefault(difficulty, "");
-            newsList.add(new NewsItemDto(category, extractTitle(raw), extractBody(raw)));
-        }
+        List<NewsItem> newsItems = newsGenerationService.fetchTodayNews(difficulty, categories);
+        List<NewsItemDto> newsList = toNewsItemDtoList(newsItems);
 
         sendMail(email, "[샘플] 오늘의 뉴스레터 - " + newsList.size() + "개 주제", newsList);
         log.info("샘플 뉴스레터 발송 완료 -> {}", email);
+    }
+
+    // 구독 신청 시 즉시 발송: DB에서 해당 난이도·카테고리 뉴스 조회하여 전달
+    public void sendSubscriptionNews(String email, String difficulty, List<String> categories) throws MessagingException {
+        List<NewsItem> newsItems = newsGenerationService.fetchTodayNews(difficulty, categories);
+        if (newsItems.isEmpty()) {
+            log.info("구독 완료 뉴스 발송 스킵 - 오늘 뉴스 없음 ({})", email);
+            return;
+        }
+        List<NewsItemDto> newsList = toNewsItemDtoList(newsItems);
+        sendMail(email, "[뉴스레터] 구독 완료! 오늘의 뉴스 - " + newsList.size() + "개 주제", newsList);
+        log.info("구독 완료 뉴스 발송 완료 -> {}", email);
+    }
+
+    private List<NewsItemDto> toNewsItemDtoList(List<NewsItem> items) {
+        return items.stream()
+            .map(n -> new NewsItemDto(n.getCategory(), extractTitle(n.getContent()), extractBody(n.getContent())))
+            .toList();
     }
 
     private void sendMail(String to, String subject, List<NewsItemDto> newsList) throws MessagingException {

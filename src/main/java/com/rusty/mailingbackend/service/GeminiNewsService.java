@@ -53,13 +53,18 @@ public class GeminiNewsService {
     private Map<String, String> parsePromptFile(String content) {
         Map<String, String> result = new HashMap<>();
         String[] sections = content.split("(?m)^## ");
-        for (String section : sections) {
+
+        // sections[0]은 # Strict Rules 공통 규칙
+        String commonRules = sections[0].strip();
+
+        for (int i = 1; i < sections.length; i++) {
+            String section = sections[i];
             if (section.isBlank()) continue;
             int newline = section.indexOf('\n');
             if (newline < 0) continue;
             String difficulty = section.substring(0, newline).trim();
             String prompt = section.substring(newline + 1).strip();
-            result.put(difficulty, prompt);
+            result.put(difficulty, commonRules + "\n\n" + prompt);
         }
         return result;
     }

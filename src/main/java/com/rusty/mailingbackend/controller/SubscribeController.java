@@ -83,6 +83,17 @@ public class SubscribeController {
         }
     }
 
+    // 오늘 뉴스 강제 재생성 GET (브라우저에서 간단 호출용)
+    @GetMapping("/regenerate-news")
+    public ResponseEntity<String> regenerateNewsGet() {
+        try {
+            newsGenerationService.regenerateToday();
+            return ResponseEntity.ok("뉴스 재생성 완료! /send-newsletter 로 발송하세요.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("재생성 실패: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/mailing")
     @ResponseBody
     public String health() {
